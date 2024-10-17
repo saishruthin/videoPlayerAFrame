@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <title>A_FRAME Video player</title>
+    <script src = "https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <style>
+        #controls {
+            position : absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+    </head>
+    <body>
+        <a-scene>
+            <a-entity camera look-controls></a-entity>
+            <a-video
+            id = "video-player"
+            src = "#video"
+            position = "0 1.6 -4"
+            rotation = "0 0 0"
+            width = "4"
+            height = "2.25"
+            autoplay
+            ></a-video>
+
+            <video id = "video" src = "player.mp4" loop crossorigin = "anonymous"></video>
+            <a-plane 
+            position = "0 0 -4"
+            rotation = "-90 0 0"
+            width = "10"
+            height = "10"
+            color = "#7BC8A4"
+            ></a-plane>
+            <a-entity laser-controls = "hand: right"></a-entity>
+        </a-scene>
+
+        <div id = "controls">
+            <label for = "volume-control">Volume:</label>
+            <input 
+            type = "range"
+            id = "volume-control"
+            min = "0"
+            max = '1'
+            step = "0.1"
+            value = "1"
+            />
+            <label for = "brightness-control">Brightness : </label>
+            <input 
+            type = "range"
+            id = "brightness-control"
+            min = "0.5"
+            max = "2"
+            step = "0.1"
+            />
+            <button onclick = "moveVideoPlayer('up')">Move Up</button>
+            <button onclick = "moveVideoPlayer('down')">Move Down</button>
+            <button onclick = "moveVideoPlayer('left')">Move Left</button>
+            <button onclick = "moveVideoPlayer('right')">Move right</button>
+            <button onclick = "pauseVideo()">Pause</button>
+            <button onclick = "playVideo()">Play</button>
+            </div>
+
+            <script>
+                const video = document.getElementById("video");
+                const volumeControl = document.getElementById("volume-control");
+                volumeControl.addEventListener("input", (e) => {
+                    video.volume = e.target.value;
+                });
+
+                const videoPlayer = document.querySelector("#video-player");
+                const brightnessControl = document.getElementById("brightness-control");
+
+                brightnessControl.addEventListener("input", (e) => {
+                    const brightness = e.target.value;
+                    videoPlayer.setAttribute("material", "opacity", brightness);
+                });
+
+                const step = 0.2;
+                function moveVideoPlayer(direction){
+                    let position = videoPlayer.getAttribute("position");
+                    switch (direction) {
+                        case "up":
+                            position.y += step;
+                            break;
+                        case "down":
+                            position.y -= step;
+                            break;
+                        case "left":
+                            position.x -= step;
+                            break;
+                        case "right":
+                            position.x += step;
+                            break;
+                    }
+                    videoPlayer.setAttribute("position", position);
+                }
+
+                function playVideo(){
+                    video.play();
+                }
+
+                function pauseVideo(){
+                    video.pause();
+                }
+            </script>
+    </body>
+
+</html>
